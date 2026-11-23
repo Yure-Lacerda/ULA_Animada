@@ -1,0 +1,44 @@
+NET "clk" LOC = "E12" | IOSTANDARD = LVCMOS33;
+
+# 'reset' signal mapped to Push Button BTN_EAST (or a switch of your choice)
+NET "reset" LOC = "T16" | IOSTANDARD = LVCMOS33 | PULLDOWN;
+
+# ------------------------------------------------------------------------------
+# 2. Control Inputs (Switches and Buttons)
+# ------------------------------------------------------------------------------
+# 'confirm' signal mapped to Push Button BTN_SOUTH (Confirmation Button)
+NET "confirm" LOC = "T15" | IOSTANDARD = LVCMOS33 | PULLDOWN;
+
+# 'sel' signal (4 bits) mapped to the 4 rightmost slide switches
+# SW3
+NET "sel<3>" LOC = "U2"  | IOSTANDARD = LVCMOS33;
+# SW2
+NET "sel<2>" LOC = "U3"  | IOSTANDARD = LVCMOS33;
+# SW1
+NET "sel<1>" LOC = "T4"  | IOSTANDARD = LVCMOS33;
+# SW0 (LSB)
+NET "sel<0>" LOC = "V8"  | IOSTANDARD = LVCMOS33;
+
+# ------------------------------------------------------------------------------
+# 3. Data Outputs (LEDs)
+# ------------------------------------------------------------------------------
+# 'resul' signal (4 bits) mapped to the 4 rightmost LEDs
+# LED3
+NET "resul<3>" LOC = "W21" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED2
+NET "resul<2>" LOC = "Y22" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED1
+NET "resul<1>" LOC = "V20" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED0 (LSB)
+NET "resul<0>" LOC = "R20" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+
+# Status Flags mapped to the 4 leftmost LEDs
+# LED7 (Zero Flag)
+NET "led_zero"     LOC = "W22" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED6 (Negative Flag)
+NET "led_negative" LOC = "W20" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED5 (Overflow Flag)
+NET "led_overflow" LOC = "Y21" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+# LED4 (Carry Flag)
+NET "led_carry"    LOC = "U20" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+"""0
