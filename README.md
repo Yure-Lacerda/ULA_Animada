@@ -1,14 +1,14 @@
 # ULA de 4 bits com FSM e Animações em LED (FPGA Spartan-3AN)
 
 Implementação em VHDL de uma Unidade Lógica e Aritmética (ULA) de 4 bits projetada para a placa **Xilinx Spartan-3AN Starter Kit** (clock de 50 MHz). O projeto combina operações lógico-aritméticas completas, sinalização de flags de status, tratamento de debounce em hardware e animações visuais temporizadas nos 8 LEDs da placa.
----
-
-
-https://github.com/user-attachments/assets/7568e207-fe62-461c-8ef5-8b7162c88520
-
 
 ---
 
+
+https://github.com/user-attachments/assets/dd5986dc-712d-4a88-8ceb-089d8d67b113
+
+
+---
 ## Destaques de Arquitetura
 
 * **Entrada Sequencial via Máquina de Estados (FSM):** Como a placa Spartan-3AN Starter Kit dispõe de 4 chaves deslizantes (*slide switches*), a arquitetura utiliza uma FSM de 4 estados para reaproveitar o mesmo barramento `sel(3 downto 0)` e o botão `confirm` para configurar a operação e os dois operandos em sequência, sem necessidade de hardware externo.
@@ -44,12 +44,24 @@ A seleção da operação é feita nos 3 bits menos significativos das chaves (`
 
 ---
 
+## Simulação e Verificação (Testbench)
+
+O arquivo `tb_ULA_SD.vhd` valida o comportamento temporal e lógico do sistema completo (ULA + Debouncer) com clock simulado de **50 MHz** (período de $20\text{ ns}$):
+
+* **Simulação Realista de Botão (`apertar_confirm`):** Procedimento dedicado que mantém o sinal `confirm` em nível alto por **25 ms** (ultrapassando a janela de 20 ms do filtro de debounce) seguido de **5 ms** em nível baixo, garantindo a verificação fiel das transições de estado da FSM.
+* **Casos de Teste Automatizados:**
+  1. **Reset Assíncrono:** Inicialização do sistema em `espera_sel` com limpeza dos registradores.
+  2. **Soma (`001`):** `5 + 4 = 9` (`"0101" + "0100" = "1001"`), validando o cálculo e o retorno ao estado inicial após nova confirmação.
+  3. **Subtração com Flag Zero (`010`):** `7 - 7 = 0` (`"0111" - "0111" = "0000"`), validando o acionamento simultâneo de `led_zero = '1'`.
+  4. **AND Lógico (`111`):** `"1100" AND "1010" = "1000"`, validando a operação bit a bit.
+
+---
+
 ## Estrutura do Repositório
 
 ```text
 ULA_Animada/
 ├── ULA_SD.vhd          # Módulo Top-Level (FSM, datapath da ULA, flags e controle dos LEDs)
 ├── debounce_ula.vhd    # Filtro de debounce síncrono e gerador de pulso de borda de subida
+├── tb_ULA_SD.vhd       # Testbench para verificação funcional e temporal da ULA e do debounce
 └── README.md           # Documentação do projeto
-
-
