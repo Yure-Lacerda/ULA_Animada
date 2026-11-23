@@ -4,11 +4,10 @@ Implementação em VHDL de uma Unidade Lógica e Aritmética (ULA) de 4 bits pro
 
 ---
 
-
-https://github.com/user-attachments/assets/dd5986dc-712d-4a88-8ceb-089d8d67b113
-
+https://github.com/user-attachments/assets/00fcf061-e313-4667-b25f-e2609cc4e80b
 
 ---
+
 ## Destaques de Arquitetura
 
 * **Entrada Sequencial via Máquina de Estados (FSM):** Como a placa Spartan-3AN Starter Kit dispõe de 4 chaves deslizantes (*slide switches*), a arquitetura utiliza uma FSM de 4 estados para reaproveitar o mesmo barramento `sel(3 downto 0)` e o botão `confirm` para configurar a operação e os dois operandos em sequência, sem necessidade de hardware externo.
@@ -44,6 +43,24 @@ A seleção da operação é feita nos 3 bits menos significativos das chaves (`
 
 ---
 
+## Mapeamento de Pinos (`ULA_SD.ucf`)
+
+O arquivo de restrições físicas (`ULA_SD.ucf`) mapeia os sinais da entidade top-level para os periféricos da placa **Spartan-3AN Starter Kit** operando no padrão lógico `LVCMOS33`:
+
+| Sinal VHDL | Direção | Periférico na Placa | Pino FPGA (`LOC`) | Configuração Extra |
+| :--- | :---: | :--- | :---: | :--- |
+| `clk` | `IN` | Oscilador On-board (50 MHz) | `E12` | `LVCMOS33` |
+| `reset` | `IN` | Botão `BTN_EAST` | `T16` | `LVCMOS33 \| PULLDOWN` |
+| `confirm` | `IN` | Botão `BTN_SOUTH` | `T15` | `LVCMOS33 \| PULLDOWN` |
+| `sel[3:0]` | `IN` | Chaves `SW3`, `SW2`, `SW1`, `SW0` | `U2`, `U3`, `T4`, `V8` | `LVCMOS33` |
+| `resul[3:0]` | `OUT` | LEDs `LED3`, `LED2`, `LED1`, `LED0` | `W21`, `Y22`, `V20`, `R20` | `SLEW = SLOW \| DRIVE = 8` |
+| `led_zero` | `OUT` | `LED7` (Flag Zero) | `W22` | `SLEW = SLOW \| DRIVE = 8` |
+| `led_negative` | `OUT` | `LED6` (Flag Negative) | `W20` | `SLEW = SLOW \| DRIVE = 8` |
+| `led_overflow` | `OUT` | `LED5` (Flag Overflow) | `Y21` | `SLEW = SLOW \| DRIVE = 8` |
+| `led_carry` | `OUT` | `LED4` (Flag Carry) | `U20` | `SLEW = SLOW \| DRIVE = 8` |
+
+---
+
 ## Simulação e Verificação (Testbench)
 
 O arquivo `tb_ULA_SD.vhd` valida o comportamento temporal e lógico do sistema completo (ULA + Debouncer) com clock simulado de **50 MHz** (período de $20\text{ ns}$):
@@ -64,4 +81,5 @@ ULA_Animada/
 ├── ULA_SD.vhd          # Módulo Top-Level (FSM, datapath da ULA, flags e controle dos LEDs)
 ├── debounce_ula.vhd    # Filtro de debounce síncrono e gerador de pulso de borda de subida
 ├── tb_ULA_SD.vhd       # Testbench para verificação funcional e temporal da ULA e do debounce
+├── ULA_SD.ucf          # Arquivo de restrições físicas e mapeamento de pinos (Spartan-3AN)
 └── README.md           # Documentação do projeto
